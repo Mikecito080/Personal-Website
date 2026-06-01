@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maicol López · Dev & RRHH</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080b10;
+  --bg2: #0e1318;
+  --bg3: #141a22;
+  --accent: #00e5ff;
+  --accent2: #7c3aed;
+  --accent3: #f59e0b;
+  --text: #e8edf5;
+  --muted: #6b7a8d;
+  --border: #1e2a38;
+  --card: #0f1520;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* CUSTOM CURSOR */
+.cursor {
+  position: fixed;
+  width: 10px; height: 10px;
+  background: var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transition: transform 0.1s ease;
+  mix-blend-mode: difference;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transition: all 0.18s ease;
+  opacity: 0.5;
+}
+
+/* NOISE OVERLAY */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.4;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 48px;
+  backdrop-filter: blur(20px);
+  background: rgba(8,11,16,0.7);
+  border-bottom: 1px solid rgba(30,42,56,0.5);
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.5px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--accent); }
+
+.nav-cta {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 8px 20px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  text-decoration: none;
+  border-radius: 2px;
+  transition: all 0.2s;
+  letter-spacing: 0.5px;
+}
+
+.nav-cta:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 120px 48px 80px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+.hero-glow {
+  position: absolute;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(0,229,255,0.08) 0%, transparent 70%);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.hero-glow2 {
+  position: absolute;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+  top: 20%; right: 10%;
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.hero-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease 0.2s forwards;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(52px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -3px;
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.35s forwards;
+}
+
+.hero h1 .line2 {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(232,237,245,0.3);
+}
+
+.hero h1 .highlight {
+  position: relative;
+  color: var(--accent);
+}
+
+.hero-desc {
+  max-width: 520px;
+  font-size: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.5s forwards;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s ease 0.65s forwards;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  background: var(--accent);
+  color: var(--bg);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 2px;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: #00bcd4;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,229,255,0.25);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  text-decoration: none;
+  border-radius: 2px;
+  letter-spacing: 0.3px;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.hero-stats {
+  position: absolute;
+  right: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  opacity: 0;
+  animation: fadeIn 0.8s ease 0.9s forwards;
+}
+
+.stat {
+  text-align: right;
+}
+
+.stat-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  margin-top: 4px;
+}
+
+.scroll-hint {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeIn 1s ease 1.2s forwards;
+}
+
+.scroll-line {
+  width: 1px;
+  height: 48px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollPulse 2s ease infinite;
+}
+
+.scroll-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 2px;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* SECTIONS */
+section { position: relative; z-index: 2; }
+
+.section-wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 100px 48px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 64px;
+}
+
+.section-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  letter-spacing: 2px;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+/* SOBRE MI */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.about-text p {
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+
+.about-text p strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.about-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 32px;
+}
+
+.chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 11.5px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.chip.accent {
+  border-color: rgba(0,229,255,0.3);
+  color: var(--accent);
+  background: rgba(0,229,255,0.05);
+}
+
+.about-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.info-row:first-child { border-top: 1px solid var(--border); }
+
+.info-key {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.info-val {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+  text-align: right;
+}
+
+/* SERVICIOS */
+.servicios-bg {
+  background: var(--bg2);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.servicios-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+}
+
+.servicio-card {
+  background: var(--card);
+  padding: 40px 36px;
+  border: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.servicio-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0,229,255,0.04), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.servicio-card:hover::before { opacity: 1; }
+.servicio-card:hover { border-color: rgba(0,229,255,0.3); transform: translateY(-4px); }
+
+.servicio-icon {
+  font-size: 28px;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.servicio-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.servicio-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  letter-spacing: -0.3px;
+}
+
+.servicio-desc {
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 24px;
+}
+
+.servicio-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.stack-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10.5px;
+  padding: 3px 8px;
+  background: rgba(0,229,255,0.06);
+  border: 1px solid rgba(0,229,255,0.15);
+  color: var(--accent);
+  border-radius: 2px;
+}
+
+/* EXPERIENCIA */
+.exp-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.exp-item {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0 48px;
+  padding: 40px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  transition: all 0.2s;
+}
+
+.exp-item:first-child { border-top: 1px solid var(--border); }
+
+.exp-item::before {
+  content: '';
+  position: absolute;
+  left: -48px; top: 0; bottom: 0;
+  width: 2px;
+  background: transparent;
+  transition: background 0.3s;
+}
+
+.exp-item:hover::before { background: var(--accent); }
+
+.exp-meta { padding-top: 4px; }
+
+.exp-fecha {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.exp-empresa {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+}
+
+.exp-cargo {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 12px;
+}
+
+.exp-desc {
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* EDUCACIÓN */
+.edu-bg { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+.edu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+}
+
+.edu-card {
+  background: var(--card);
+  padding: 36px;
+  border: 1px solid var(--border);
+  transition: all 0.25s;
+}
+
+.edu-card:hover {
+  border-color: rgba(124,58,237,0.4);
+  transform: translateY(-3px);
+}
+
+.edu-year {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent2);
+  letter-spacing: 1.5px;
+  margin-bottom: 12px;
+}
+
+.edu-titulo {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  letter-spacing: -0.2px;
+  line-height: 1.3;
+}
+
+.edu-inst {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.edu-badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9.5px;
+  padding: 3px 8px;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid rgba(124,58,237,0.3);
+  color: #a78bfa;
+  border-radius: 2px;
+  margin-top: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* SKILLS */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.skills-group h3 {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.skill-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30,42,56,0.5);
+}
+
+.skill-name {
+  font-size: 13.5px;
+  color: var(--text);
+}
+
+.skill-bar {
+  width: 80px;
+  height: 2px;
+  background: var(--border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.skill-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 1px;
+  transition: width 1s ease;
+}
+
+/* CONTACTO */
+.contact-bg {
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.contact-left h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 20px;
+}
+
+.contact-left h2 span { color: var(--accent); }
+
+.contact-left p {
+  font-size: 15px;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+.contact-links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.contact-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  text-decoration: none;
+  color: var(--text);
+  border-radius: 4px;
+  transition: all 0.25s;
+}
+
+.contact-link:hover {
+  border-color: var(--accent);
+  transform: translateX(8px);
+}
+
+.contact-link-icon {
+  font-size: 20px;
+  width: 40px;
+  text-align: center;
+}
+
+.contact-link-info { flex: 1; }
+
+.contact-link-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+}
+
+.contact-link-value {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.contact-link-arrow {
+  color: var(--muted);
+  font-size: 18px;
+  transition: color 0.2s;
+}
+
+.contact-link:hover .contact-link-arrow { color: var(--accent); }
+
+.price-box {
+  background: var(--card);
+  border: 1px solid var(--border);
+  padding: 32px;
+  border-radius: 4px;
+}
+
+.price-box h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  letter-spacing: -0.3px;
+}
+
+.price-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.price-item:last-child { border-bottom: none; }
+
+.price-service { font-size: 14px; color: var(--muted); }
+
+.price-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: var(--accent3);
+}
+
+.price-note {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  letter-spacing: 0.3px;
+}
+
+/* FOOTER */
+footer {
+  padding: 32px 48px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+}
+
+.footer-logo span { color: var(--accent); }
+
+.footer-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scrollPulse {
+  0%, 100% { opacity: 1; transform: scaleY(1); }
+  50% { opacity: 0.3; transform: scaleY(0.7); }
+}
+
+/* REVEAL ON SCROLL */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  nav { padding: 16px 20px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 20px 80px; }
+  .hero-stats { display: none; }
+  .section-wrap { padding: 64px 20px; }
+  .about-grid { grid-template-columns: 1fr; gap: 40px; }
+  .servicios-grid { grid-template-columns: 1fr; }
+  .edu-grid { grid-template-columns: 1fr; }
+  .skills-grid { grid-template-columns: 1fr; }
+  .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+  .exp-item { grid-template-columns: 1fr; gap: 8px; }
+  footer { flex-direction: column; gap: 12px; text-align: center; }
+  body { cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">ML<span>.</span></a>
+  <ul class="nav-links">
+    <li><a href="#sobre-mi">sobre mí</a></li>
+    <li><a href="#servicios">servicios</a></li>
+    <li><a href="#experiencia">experiencia</a></li>
+    <li><a href="#educacion">educación</a></li>
+    <li><a href="#contacto">contacto</a></li>
+  </ul>
+  <a href="mailto:Mslopez339@gmail.com" class="nav-cta">Contactar →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+
+  <div class="hero-content">
+    <div class="hero-label">// disponible para proyectos</div>
+    <h1>
+      Maicol<br>
+      <span class="line2">López</span>
+    </h1>
+    <p class="hero-desc">
+      Desarrollador junior & gestor de talento humano. Construyo soluciones digitales — páginas web, apps móviles y sistemas a medida — con +1 año de experiencia freelance.
+    </p>
+    <div class="hero-actions">
+      <a href="#servicios" class="btn-primary">Ver servicios →</a>
+      <a href="#contacto" class="btn-secondary">Contactar</a>
+    </div>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">+1</div>
+      <div class="stat-label">AÑO FREELANCE</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">6+</div>
+      <div class="stat-label">TECNOLOGÍAS</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">B1</div>
+      <div class="stat-label">INGLÉS</div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span class="scroll-text">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- SOBRE MÍ -->
+<section id="sobre-mi">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-num">01</span>
+      <h2 class="section-title">Sobre mí</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>Soy <strong>Maicol López</strong>, desarrollador junior con 23 años, resido en Bogotá, Colombia. Combino formación técnica en desarrollo de software con experiencia real en gestión del talento humano y logística.</p>
+        <p>Tengo más de <strong>un año de experiencia freelance</strong> construyendo soluciones web y móviles para clientes, y actualmente curso el 6.° semestre de Tecnología en Desarrollo de Software en la Uniagustiniana.</p>
+        <p>Me apasiona <strong>resolver problemas reales con código</strong>, aprender nuevas tecnologías y entregar proyectos que realmente funcionen para quien los usa.</p>
+        <div class="about-tags">
+          <span class="chip accent">Python</span>
+          <span class="chip accent">React</span>
+          <span class="chip accent">PHP</span>
+          <span class="chip accent">MySQL</span>
+          <span class="chip accent">Java</span>
+          <span class="chip accent">HTML/CSS</span>
+          <span class="chip">SG-SST</span>
+          <span class="chip">RRHH</span>
+          <span class="chip">Liderazgo</span>
+          <span class="chip">Inglés B1</span>
+        </div>
+      </div>
+      <div class="about-info reveal">
+        <div class="info-row">
+          <span class="info-key">Ubicación</span>
+          <span class="info-val">Bogotá, Colombia</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Edad</span>
+          <span class="info-val">23 años</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Disponibilidad</span>
+          <span class="info-val">Inmediata ✓</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Modalidad</span>
+          <span class="info-val">Presencial · Remoto · Híbrido</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Idiomas</span>
+          <span class="info-val">Español · Inglés B1</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Licencia</span>
+          <span class="info-val">A2</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Correo</span>
+          <span class="info-val">Mslopez339@gmail.com</span>
+        </div>
+        <div class="info-row">
+          <span class="info-key">Teléfono</span>
+          <span class="info-val">316 288 3610</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICIOS -->
+<section id="servicios" class="servicios-bg">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Servicios</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="servicios-grid">
+      <div class="servicio-card reveal">
+        <span class="servicio-icon">🌐</span>
+        <div class="servicio-num">// 001</div>
+        <div class="servicio-title">Páginas Web</div>
+        <p class="servicio-desc">Diseño y desarrollo de sitios web a medida: landing pages, portafolios, sitios corporativos y tiendas online. Responsive, rápidos y optimizados.</p>
+        <div class="servicio-stack">
+          <span class="stack-tag">HTML/CSS</span>
+          <span class="stack-tag">JavaScript</span>
+          <span class="stack-tag">PHP</span>
+          <span class="stack-tag">React</span>
+        </div>
+      </div>
+      <div class="servicio-card reveal">
+        <span class="servicio-icon">📱</span>
+        <div class="servicio-num">// 002</div>
+        <div class="servicio-title">Apps Móviles</div>
+        <p class="servicio-desc">Desarrollo de aplicaciones móviles funcionales adaptadas a las necesidades de tu negocio o proyecto personal, desde la idea hasta la entrega.</p>
+        <div class="servicio-stack">
+          <span class="stack-tag">Java</span>
+          <span class="stack-tag">React Native</span>
+          <span class="stack-tag">Python</span>
+        </div>
+      </div>
+      <div class="servicio-card reveal">
+        <span class="servicio-icon">🗄️</span>
+        <div class="servicio-num">// 003</div>
+        <div class="servicio-title">Sistemas Web</div>
+        <p class="servicio-desc">Sistemas de gestión, inventarios, dashboards y aplicaciones internas con base de datos. Soluciones completas back-end y front-end.</p>
+        <div class="servicio-stack">
+          <span class="stack-tag">MySQL</span>
+          <span class="stack-tag">PHP</span>
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">Flask</span>
+        </div>
+      </div>
+      <div class="servicio-card reveal">
+        <span class="servicio-icon">⚙️</span>
+        <div class="servicio-num">// 004</div>
+        <div class="servicio-title">Automatización</div>
+        <p class="servicio-desc">Scripts y herramientas para automatizar procesos repetitivos, procesamiento de datos y flujos de trabajo que ahorran tiempo y recursos.</p>
+        <div class="servicio-stack">
+          <span class="stack-tag">Python</span>
+          <span class="stack-tag">APIs REST</span>
+          <span class="stack-tag">MySQL</span>
+        </div>
+      </div>
+      <div class="servicio-card reveal">
+        <span class="servicio-icon">🗂️</span>
+        <div class="servicio-num">// 005</div>
+        <div class="servicio-title">Gestión RRHH</div>
+        <p class="servicio-desc">Consultoría y apoyo en procesos de selección, contratación, nómina y SG-SST. Experiencia real en empresas del sector seguridad y hotelero.</p>
+        <div class="servicio-stack">
+          <span class="stack-tag">SG-SST</span>
+          <span class="stack-tag">Nómina</span>
+          <span class="stack-tag">Selección</span>
+        </div>
+      </div>
+      <div class="servicio-card reveal">
+        <span class="servicio-icon">🧩</span>
+        <div class="servicio-num">// 006</div>
+        <div class="servicio-title">Proyectos a Medida</div>
+        <p class="servicio-desc">¿Tienes una idea fuera de lo común? Lo evaluamos juntos. Me adapto a requerimientos específicos y ofrezco cotización sin costo.</p>
+        <div class="servicio-stack">
+          <span class="stack-tag">Consulta gratuita</span>
+          <span class="stack-tag">A medida</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCIA -->
+<section id="experiencia">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Experiencia</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-list">
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-fecha">2023 — PRESENTE</div>
+          <div class="exp-empresa">Independiente</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-cargo">Desarrollador Freelancer</div>
+          <p class="exp-desc">Desarrollo de aplicaciones web y móviles para clientes independientes. Implementación de soluciones con HTML, CSS, PHP, MySQL, Java, Python y React. Gestión completa de proyectos: levantamiento de requerimientos, diseño, desarrollo y entrega.</p>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-fecha">2022 — 2023</div>
+          <div class="exp-empresa">Hotel 104 Art Suites</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-cargo">Recepcionista / Auditor de Recepción</div>
+          <p class="exp-desc">Atención integral al cliente de forma presencial y telefónica. Gestión de check-in y check-out, facturación, manejo de caja y conciliación de ingresos.</p>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-fecha">2021 — 2022</div>
+          <div class="exp-empresa">K9 Security LTDA</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-cargo">Jefe Logístico</div>
+          <p class="exp-desc">Gestión de requerimientos internos y de clientes, manejo de inventarios y proveedores, control de órdenes de compra y flota vehicular.</p>
+        </div>
+      </div>
+      <div class="exp-item reveal">
+        <div class="exp-meta">
+          <div class="exp-fecha">2020 — 2021</div>
+          <div class="exp-empresa">K9 Security LTDA</div>
+        </div>
+        <div class="exp-body">
+          <div class="exp-cargo">Auxiliar de Recursos Humanos</div>
+          <p class="exp-desc">Apoyo en preselección, selección y contratación de personal, manejo de bases de datos, gestión del SG-SST, actualización de historias laborales y procesamiento de nómina.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCACIÓN -->
+<section id="educacion" class="edu-bg">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Educación</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <div class="edu-year">2023 — PRESENTE</div>
+        <div class="edu-titulo">Tecnología en Desarrollo de Software</div>
+        <div class="edu-inst">Universitaria Agustiniana — Uniagustiniana · Bogotá</div>
+        <div class="edu-badge">6.° semestre en curso</div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">2020 — 2022</div>
+        <div class="edu-titulo">Tecnólogo en Gestión del Talento Humano</div>
+        <div class="edu-inst">SENA</div>
+        <div class="edu-badge">Graduado</div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">2021</div>
+        <div class="edu-titulo">Inglés Comunicativo B1</div>
+        <div class="edu-inst">Instituto Tecnisistemas</div>
+        <div class="edu-badge">Certificado</div>
+      </div>
+      <div class="edu-card reveal">
+        <div class="edu-year">2020</div>
+        <div class="edu-titulo">Diplomado en Marketing Digital</div>
+        <div class="edu-inst">Politécnico Superior de Colombia</div>
+        <div class="edu-badge">Certificado</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Habilidades</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="skills-grid">
+      <div class="skills-group reveal">
+        <h3>Frontend</h3>
+        <div class="skill-item"><span class="skill-name">HTML / CSS</span><div class="skill-bar"><div class="skill-fill" style="width:90%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">JavaScript</span><div class="skill-bar"><div class="skill-fill" style="width:72%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">React</span><div class="skill-bar"><div class="skill-fill" style="width:65%"></div></div></div>
+      </div>
+      <div class="skills-group reveal">
+        <h3>Backend & BD</h3>
+        <div class="skill-item"><span class="skill-name">Python</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">PHP</span><div class="skill-bar"><div class="skill-fill" style="width:70%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">MySQL</span><div class="skill-bar"><div class="skill-fill" style="width:75%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Java</span><div class="skill-bar"><div class="skill-fill" style="width:60%"></div></div></div>
+      </div>
+      <div class="skills-group reveal">
+        <h3>Gestión & Soft</h3>
+        <div class="skill-item"><span class="skill-name">Gestión RRHH</span><div class="skill-bar"><div class="skill-fill" style="width:88%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">SG-SST</span><div class="skill-bar"><div class="skill-fill" style="width:80%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Liderazgo</span><div class="skill-bar"><div class="skill-fill" style="width:82%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Inglés B1</span><div class="skill-bar"><div class="skill-fill" style="width:55%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTO -->
+<section id="contacto" class="contact-bg">
+  <div class="section-wrap">
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <h2>Trabajemos<br><span>juntos.</span></h2>
+        <p>¿Tienes un proyecto, una idea o una oportunidad? Escríbeme y hablamos. Cotización sin costo para proyectos freelance.</p>
+        <div class="contact-links">
+          <a href="mailto:Mslopez339@gmail.com" class="contact-link">
+            <span class="contact-link-icon">✉️</span>
+            <div class="contact-link-info">
+              <div class="contact-link-label">Correo</div>
+              <div class="contact-link-value">Mslopez339@gmail.com</div>
+            </div>
+            <span class="contact-link-arrow">→</span>
+          </a>
+          <a href="tel:3162883610" class="contact-link">
+            <span class="contact-link-icon">📞</span>
+            <div class="contact-link-info">
+              <div class="contact-link-label">WhatsApp / Llamada</div>
+              <div class="contact-link-value">316 288 3610</div>
+            </div>
+            <span class="contact-link-arrow">→</span>
+          </a>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="price-box">
+          <h3>Tarifas orientativas</h3>
+          <div class="price-item">
+            <span class="price-service">Landing page</span>
+            <span class="price-val">desde $300K COP</span>
+          </div>
+          <div class="price-item">
+            <span class="price-service">Sitio web completo</span>
+            <span class="price-val">desde $700K COP</span>
+          </div>
+          <div class="price-item">
+            <span class="price-service">App móvil básica</span>
+            <span class="price-val">desde $1.5M COP</span>
+          </div>
+          <div class="price-item">
+            <span class="price-service">Sistema web a medida</span>
+            <span class="price-val">cotización</span>
+          </div>
+          <div class="price-item">
+            <span class="price-service">Hora freelance</span>
+            <span class="price-val">$45K–$65K / hora</span>
+          </div>
+          <p class="price-note">* Precios referenciales. Cada proyecto se cotiza según alcance y complejidad.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">ML<span>.</span></div>
+  <div class="footer-text">maicol lópez · bogotá, colombia · 2026</div>
+  <div class="footer-text">mslopez339@gmail.com</div>
+</footer>
+
+<script>
+// CURSOR
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursor.style.left = mx - 5 + 'px';
+  cursor.style.top = my - 5 + 'px';
+});
+
+function animateRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx - 18 + 'px';
+  ring.style.top = ry - 18 + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.transform = 'scale(2)';
+    ring.style.transform = 'scale(1.5)';
+    ring.style.opacity = '0.2';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.transform = 'scale(1)';
+    ring.style.transform = 'scale(1)';
+    ring.style.opacity = '0.5';
+  });
+});
+
+// SCROLL REVEAL
+const revealEls = document.querySelectorAll('.reveal');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+revealEls.forEach(el => observer.observe(el));
+
+// SMOOTH SCROLL
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>
